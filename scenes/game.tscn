@@ -1,0 +1,103 @@
+[gd_scene load_steps=8 format=3 uid="uid://bw1ql1rhmmgue"]
+
+[ext_resource type="Script" path="res://scripts/ui.gd" id="1_ujp1l"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_53i3x"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_jvunt"]
+sky_material = SubResource("ProceduralSkyMaterial_53i3x")
+
+[sub_resource type="Environment" id="Environment_dx0aw"]
+background_mode = 2
+sky = SubResource("Sky_jvunt")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_2u56e"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mt08f"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_jgbp4"]
+
+[node name="Game" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0.49744, -0.796689, 0.343279, 0.0505282, 0.421648, 0.905351, 0, 3.87931, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_dx0aw")
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+transform = Transform3D(15.9289, 0, 0, 0, 0.0278462, 0, 0, 0, 11.1641, 0, 0, 0)
+mesh = SubResource("BoxMesh_2u56e")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Ground"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("BoxShape3D_mt08f")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+script = ExtResource("1_ujp1l")
+
+[node name="Basic_UI" type="Control" parent="UI"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="topPanel" type="Panel" parent="UI/Basic_UI"]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 32.0
+
+[node name="botPanel" type="Panel" parent="UI/Basic_UI"]
+layout_mode = 0
+offset_top = 576.0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="map_panel" type="Panel" parent="UI/Basic_UI/botPanel"]
+layout_mode = 0
+offset_top = -96.0
+offset_right = 168.0
+offset_bottom = 72.0
+
+[node name="unit_panel" type="Panel" parent="UI/Basic_UI/botPanel"]
+layout_mode = 0
+offset_left = 928.0
+offset_top = -104.0
+offset_right = 1152.0
+offset_bottom = 72.0
+
+[node name="build_panel" type="Panel" parent="UI/Basic_UI/botPanel/unit_panel"]
+layout_mode = 0
+offset_right = 224.0
+offset_bottom = 176.0
+
+[node name="powerStation_button" type="Button" parent="UI/Basic_UI/botPanel/unit_panel/build_panel"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 8.0
+offset_right = 96.0
+offset_bottom = 40.0
+text = "Elektrárna"
+
+[node name="Camera3D" type="Camera3D" parent="UI"]
+transform = Transform3D(1, 0, 0, 0, 0.725699, 0.688013, 0, -0.688013, 0.725699, 0, 9.85822, 9.16684)
+
+[node name="Underground" type="Node3D" parent="."]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Underground"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Underground/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6.8276, 0)
+shape = SubResource("WorldBoundaryShape3D_jgbp4")
+
+[connection signal="pressed" from="UI/Basic_UI/botPanel/unit_panel/build_panel/powerStation_button" to="UI" method="_on_power_station_button_pressed"]

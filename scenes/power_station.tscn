@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://r0gmam5afvgn"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0uhfo"]
+albedo_color = Color(0, 0.579441, 0.932212, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_h62sd"]
+material = SubResource("StandardMaterial3D_0uhfo")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f0m2a"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_djv5g"]
+inner_radius = 1.136
+outer_radius = 1.172
+
+[node name="PowerStation" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_h62sd")
+skeleton = NodePath("")
+
+[node name="Area3D" type="Area3D" parent="MeshInstance3D" groups=["buildings"]]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/Area3D"]
+shape = SubResource("BoxShape3D_f0m2a")
+
+[node name="selected_ring" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(1.00663, 0, 0, 0, 0.100663, 0, 0, 0, 1.00663, 0, -0.5, 0)
+mesh = SubResource("TorusMesh_djv5g")

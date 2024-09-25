@@ -1,0 +1,13 @@
+Postavit budovy
+	více typů (lidi)
+	Funkční UI budovy
+UI - více budov na výběr
+Hnutí kamery díky myši
+Pohyb jednotek
+
+
+
+budovy:
+hlavní budova
+Bojová akademie
+elektrárna
