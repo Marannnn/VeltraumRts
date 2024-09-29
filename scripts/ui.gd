@@ -1,14 +1,17 @@
 extends Control
 
-#budovy
-@onready var powerStation_scene = preload("res://scenes/power_station.tscn")
-
 #svět
 @onready var game_node = get_tree().get_root().get_node("Game")
 
+#budovy
+@onready var powerStation_scene = preload("res://scenes/power_station.tscn")
+
 #var buildings
-var selecting_building:bool = false
+var placing_building:bool = false
 var selected_building
+
+#ui
+var ui_panel
 
 func mouse_raycast():
 	var camera = $Camera3D # odkazuje na camera3d
@@ -21,28 +24,52 @@ func mouse_raycast():
 	ray_query.from = from
 	ray_query.to = to
 	
-	if selecting_building == false: # pokd neselektuju zadnou budovu
+	if placing_building == false: # pokd neselektuju zadnou budovu
 		ray_query.collide_with_areas =true # ray paprsek koliduje s area3d
 	
 	return space.intersect_ray(ray_query) # vrati s cim ray paprsek colidoval
 func _on_power_station_button_pressed() -> void:
 	var powerStation = powerStation_scene.instantiate()
 	add_child(powerStation)
+	placing_building = true
 	selected_building = powerStation
-	selecting_building = true
+	ui_panel = $"Basic_UI/bot-right_panel/buildings/powerStation_panel"
 func _input(event: InputEvent) -> void:
 	mouse_raycast()
 	if Input.is_action_just_pressed("mouse-left_click"):
 		mouse_raycast()
 		print(mouse_raycast().collider)
-		if selecting_building == true: # pokud selectuju budovu
-			selecting_building = false # selektovani se da false = budova zustane na miste, prestane nasledovat mys
-		if selecting_building == false: # pokud neselektuju budovu
+		#Place building
+		if placing_building == true: # pokud placeuju budovu
+			placing_building = false # selektovani se da false = budova zustane na miste, prestane nasledovat mys
+			selected_building = null
+		if placing_building == false: # pokud neplaceuju budovu
 			if mouse_raycast().collider is Area3D: # pokud ray paprsek colidoval s Area3d
-				if mouse_raycast().collider.is_in_group("buildings"): # pokud area3d je v groupe buildings
-					if selected_building != null:
-						selected_building.get_parent().get_node("selected_ring").visible = true
+				#Use building
+				if mouse_raycast().collider.is_in_group("buildings"): # pokud area3d je v groupe buildings	
+					if selected_building == null: # pokud neni selektnuta zadna budova
+						selected_building = mouse_raycast().collider.get_parent().get_parent()
+						ui_panel.visible = true
+						selected_building.get_node("MeshInstance3D/selected_ring").visible = true# zapne viditelnost ringu dane budovy
+				#PROVIZORNI BUILD JEDNOTKA 
+				if mouse_raycast().collider.is_in_group("test"):
+					if selected_building == null:
+						selected_building = mouse_raycast().collider.get_parent().get_parent()
+						ui_panel = $"Basic_UI/bot-right_panel/units/build-unit_panel"
+						ui_panel.visible = true
+			#Hide/close building
+			if mouse_raycast().collider is StaticBody3D:
+				if selected_building != null:
+					#selected_building.get_node("MeshInstance3D/selected_ring").visible = false
+					if ui_panel != null:
+						print(ui_panel)
+						ui_panel.visible = false
+					selected_building = null # budova se neselektuje 
+			#Select building
+			
+			
+				
 			
 func _physics_process(delta: float) -> void:
-	if selecting_building == true: # pokud se selektuje budova
+	if placing_building == true: # pokud se selektuje budova
 		selected_building.global_position = mouse_raycast().position # global pozice budovy se da na raycast pozici mysi
