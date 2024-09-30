@@ -66,10 +66,16 @@ func _input(event: InputEvent) -> void:
 						ui_panel.visible = false
 					selected_building = null # budova se neselektuje 
 			#Select building
-			
-			
-				
+						
 			
 func _physics_process(delta: float) -> void:
 	if placing_building == true: # pokud se selektuje budova
 		selected_building.global_position = mouse_raycast().position # global pozice budovy se da na raycast pozici mysi
+
+func place_building() -> void:
+	if 
+	placing_building = false #budova se da na lokaci mysi
+	
+	
+func _on_prop_area_3d_area_entered(area: Area3D) -> void:
+	

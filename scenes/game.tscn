@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bw1ql1rhmmgue"]
+[gd_scene load_steps=12 format=3 uid="uid://bw1ql1rhmmgue"]
 
 [ext_resource type="Script" path="res://scripts/ui.gd" id="1_ujp1l"]
 
@@ -24,6 +24,10 @@ glow_enabled = true
 [sub_resource type="BoxMesh" id="BoxMesh_shkq6"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_18roa"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_s7fav"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qeid6"]
 
 [node name="Game" type="Node3D"]
 
@@ -134,6 +138,7 @@ shape = SubResource("WorldBoundaryShape3D_jgbp4")
 
 [node name="Node3D" type="Node3D" parent="kosticky"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.499707, 0)
+visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="kosticky/Node3D"]
 mesh = SubResource("BoxMesh_shkq6")
@@ -145,4 +150,17 @@ mesh = SubResource("BoxMesh_shkq6")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="kosticky/Node3D/MeshInstance3D/Area3D"]
 shape = SubResource("BoxShape3D_18roa")
 
+[node name="prop" type="Node3D" parent="kosticky"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="kosticky/prop"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.30333, 0.589653, 0)
+mesh = SubResource("BoxMesh_s7fav")
+
+[node name="prop_Area3d" type="Area3D" parent="kosticky/prop/MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="kosticky/prop/MeshInstance3D/prop_Area3d"]
+shape = SubResource("BoxShape3D_qeid6")
+
 [connection signal="pressed" from="UI/Basic_UI/bot-right_panel/units/build-unit_panel/powerStation_button" to="UI" method="_on_power_station_button_pressed"]
+[connection signal="area_entered" from="kosticky/prop/MeshInstance3D/prop_Area3d" to="UI" method="_on_prop_area_3d_area_entered"]
+[connection signal="area_shape_entered" from="kosticky/prop/MeshInstance3D/prop_Area3d" to="UI" method="_on_area_3d_area_shape_entered"]
